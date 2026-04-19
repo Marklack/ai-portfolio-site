@@ -1,32 +1,30 @@
-// Highlight active nav link based on scroll position
+// Nav: add scrolled class for shadow, and highlight active section link
 (function () {
+  const nav = document.getElementById("site-nav");
   const sections = document.querySelectorAll("main section[id]");
   const navLinks = document.querySelectorAll(".nav-links a");
 
-  function setActiveLink() {
+  function onScroll() {
+    // Shadow when scrolled past hero
+    if (window.scrollY > 20) {
+      nav.classList.add("scrolled");
+    } else {
+      nav.classList.remove("scrolled");
+    }
+
+    // Active link highlight
     let current = "";
     sections.forEach((section) => {
-      const sectionTop = section.offsetTop - 80;
-      if (window.scrollY >= sectionTop) {
+      if (window.scrollY >= section.offsetTop - 90) {
         current = section.getAttribute("id");
       }
     });
 
     navLinks.forEach((link) => {
-      link.classList.remove("active");
-      if (link.getAttribute("href") === "#" + current) {
-        link.classList.add("active");
-      }
+      link.classList.toggle("active", link.getAttribute("href") === "#" + current);
     });
   }
 
-  window.addEventListener("scroll", setActiveLink, { passive: true });
-  setActiveLink();
-})();
-
-// Add .active style inline so no extra CSS file is needed
-(function () {
-  const style = document.createElement("style");
-  style.textContent = ".nav-links a.active { color: var(--color-accent); }";
-  document.head.appendChild(style);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 })();
